@@ -21,9 +21,12 @@ Commands :: enum {
 
 Args :: [Commands]string
 
-
 main :: proc() {
 	context.logger = log.create_console_logger()
+
+	if len(os.args) < 2 {
+		get_help()
+	}
 
 	commands: Args
 	commands[.New] = "new"
@@ -36,13 +39,9 @@ main :: proc() {
 		cwd = cwd,
 	}
 
-	if len(os.args) < 2 {
-		get_help()
-	}
-
 	arg: string = os.args[1]
 
-	if !slice.contains([]string{"new", "get"}, arg) {
+	if !slice.contains([]string{"new", "get", "-h", "-help"}, arg) {
 		log.panic("argument", arg, "is not exists")
 	}
 	switch arg {
@@ -52,5 +51,8 @@ main :: proc() {
 	case commands[.Get]:
 		flags.parse_or_exit(&opts.get, os.args)
 		command_get(&opts.get, &opts)
+	case "-h", "-help", "--help":
+		get_help()
 	}
+
 }

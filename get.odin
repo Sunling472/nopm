@@ -7,17 +7,16 @@ import sp "core:path/slashpath"
 import st "core:strings"
 
 CmdGet :: struct {
-	get:        string `args:"pos=0,hidden"`,
-	url:        string `args:"pos=1,required"`,
-	global:     bool `args:"name=g"`,
-	share_path: string `args:"name=sp"`,
+	get:       string `args:"pos=0,hidden"`,
+	url:       string `args:"pos=1,required"`,
+	global:    bool `args:"name=g"`,
+	odin_path: string `args:"name=op"`,
 }
 
 LIBS_DIR :: "libs"
+DEFAUL_CONFIG_PATH :: "home/sunling/.config/opm/config.json"
 
-when ODIN_OS == .Linux {
-	ODIN_PATH :: "/home/sunling/.odin"
-}
+cfg := load_config(DEFAUL_CONFIG_PATH)
 
 
 parse_lib_name :: proc(url: string) -> (name: string) {
@@ -30,10 +29,11 @@ parse_lib_name :: proc(url: string) -> (name: string) {
 command_get :: proc(model: ^CmdGet, opt: ^Options) {
 	ld: string
 	if model.global {
-		if model.share_path == "" {
-			model.share_path = sp.join({ODIN_PATH, "shared"})
+		if model.odin_path == "" {
+			ld = sp.join({cfg.odin_path, "shared"})
+		} else {
+			ld = sp.join({model.odin_path, "shared"})
 		}
-		ld = model.share_path
 	} else {
 		create_libs_path(opt.cwd)
 		ld = create_libs_path(opt.cwd)
@@ -44,6 +44,5 @@ command_get :: proc(model: ^CmdGet, opt: ^Options) {
 	result_wd := sp.join({ld, lib_name})
 
 	os.chdir(ld)
-	args := []string{"git", "clone", model.url, result_wd}
-	cmd_start(..args)
+	cmd_process_replace("git", "clone", model.url, result_wd)
 }
