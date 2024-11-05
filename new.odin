@@ -55,28 +55,6 @@ command_new :: proc(model: ^CmdNew, opt: ^Options) {
 
 	os.set_working_directory(path)
 	create_files(model.name)
-	// {
-	// 	f, err_f := os.create("main.odin")
-	// 	defer os.close(f)
-	// 	if err_f != nil do log.panic(err_f)
-
-	// 	_, err_write := os.write_string(f, fmt.aprintf(main_file, model.name))
-	// 	if err_write != nil do log.panic(err_write)
-	// }
-	// {
-	// 	f, err_f := os.create("ols.json")
-	// 	defer os.close(f)
-	// 	if err_f != nil do log.panic(err_f)
-
-	// 	_, err_write := os.write_string(f, ols_file)
-	// 	if err_write != nil do log.panic(err_write)
-	// }
-	// {
-	// 	f, err_f := os.create("odinfmt.json")
-	// 	defer os.close(f)
-	// 	if err_f != nil do log.panic(err_f)
-
-	// 	_, err_write := os.write_string(f, odin_fmt_file)
-	// 	if err_write != nil do log.panic(err_write)
-	// }
+	cmd_start("git", "init")
+	log.info("Done")
 }

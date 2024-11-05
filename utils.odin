@@ -2,9 +2,13 @@ package opm
 
 import "core:fmt"
 import "core:log"
+import dos "core:os"
 import os "core:os/os2"
 import p "core:path/slashpath"
 import sl "core:slice"
+import st "core:strings"
+import ln "core:sys/linux"
+// import "vendor:libc"
 
 create_libs_path :: proc(cwd: string) -> (lib_dir: string) {
 	lib_dir = p.join({cwd, "libs"})
@@ -24,14 +28,19 @@ cmd_start :: proc(args: ..string) {
 
 	p: os.Process
 	{
-		p, err := os.process_start(pd)
-		log.info("Start")
+		state, out, std_err, err := os.process_exec(pd, context.temp_allocator)
 		if err != nil do log.panic(err)
+
+		// log.info(string(std_err))
+		// log.info(string(out))
 	}
-	log.info("Waiting...")
-	{
-		_, err := os.process_wait(p)
-		if err != nil && err != .EINVAL do log.panic(err)
-	}
-	log.info("Done")
+	// log.info("Done")
+}
+
+cmd_process_replace :: proc(name: string, args: ..string) {
+	defer os.exit(0)
+
+	log.info("Start process")
+	err_exec := dos.execvp(name, args)
+	if err_exec != nil do log.panic(err_exec)
 }
