@@ -1,4 +1,4 @@
-package opm
+package nopm
 
 import "core:encoding/json"
 import "core:log"

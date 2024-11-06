@@ -1,4 +1,4 @@
-package opm
+package nopm
 
 import "core:fmt"
 import "core:log"
@@ -14,7 +14,7 @@ CmdGet :: struct {
 }
 
 LIBS_DIR :: "libs"
-DEFAUL_CONFIG_PATH :: ".config/opm/config.json"
+DEFAUL_CONFIG_PATH :: ".config/nopm/config.json"
 
 
 parse_lib_name :: proc(url: string) -> (name: string) {

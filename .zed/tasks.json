@@ -3,12 +3,12 @@
 // Example:
 [
   {
-    "label": "opm run new",
-    "command": "odin build . && ./opm new project"
+    "label": "nopm run new",
+    "command": "odin build . && ./nopm new project"
   },
   {
-    "label": "opm run get",
-    "command": "odin build . && ./opm get https://github.com/floooh/sokol-odin.git"
+    "label": "nopm run get",
+    "command": "odin build . && ./nopm get https://github.com/floooh/sokol-odin.git"
   },
   {
     "label": "build",
