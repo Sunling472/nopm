@@ -41,9 +41,6 @@ main :: proc() {
 
 	arg: string = os.args[1]
 
-	if !slice.contains([]string{"new", "get", "-h", "-help"}, arg) {
-		log.panic("argument", arg, "is not exists")
-	}
 	switch arg {
 	case commands[.New]:
 		flags.parse_or_exit(&opts.new, os.args)
@@ -53,6 +50,8 @@ main :: proc() {
 		command_get(&opts.get, &opts)
 	case "-h", "-help", "--help":
 		get_help()
+	case:
+		log.panic("argument", arg, "is not exists")
 	}
 
 }

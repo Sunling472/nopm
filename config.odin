@@ -9,8 +9,16 @@ Config :: struct {
 }
 
 load_config :: proc(path: string) -> (c: Config) {
-	path := "../../.config/opm/config.json"
-	data, ok := os.read_entire_file(path)
+	cwd := os.get_env("PWD")
+	home := os.get_env("HOME")
+	if home == "" {
+		log.panic("environment variable HOME is required")
+	}
+
+	os.set_current_directory(home)
+	defer os.set_current_directory(cwd)
+
+	data, ok := os.read_entire_file_from_filename(path, context.allocator)
 	defer delete(data)
 
 	if !ok do panic("Error read")
