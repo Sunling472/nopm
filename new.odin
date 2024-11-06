@@ -1,4 +1,4 @@
-package opm
+package nopm
 
 import "core:fmt"
 import "core:log"

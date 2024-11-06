@@ -1,4 +1,4 @@
-package opm
+package nopm
 
 import "core:flags"
 import "core:fmt"
@@ -11,8 +11,8 @@ command_list := map[string]typeid {
 }
 
 command_help := map[string]string {
-	"new" = "Example: opm new <project_name> [flags]",
-	"get" = "Example: opm get <repo_url> [flags]",
+	"new" = "Example: nopm new <project_name> [flags]",
+	"get" = "Example: nopm get <repo_url> [flags]",
 }
 
 get_help :: proc() {
