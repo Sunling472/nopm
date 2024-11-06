@@ -14,9 +14,7 @@ CmdGet :: struct {
 }
 
 LIBS_DIR :: "libs"
-DEFAUL_CONFIG_PATH :: "home/sunling/.config/opm/config.json"
-
-cfg := load_config(DEFAUL_CONFIG_PATH)
+DEFAUL_CONFIG_PATH :: ".config/opm/config.json"
 
 
 parse_lib_name :: proc(url: string) -> (name: string) {
@@ -27,6 +25,8 @@ parse_lib_name :: proc(url: string) -> (name: string) {
 }
 
 command_get :: proc(model: ^CmdGet, opt: ^Options) {
+	cfg := load_config(DEFAUL_CONFIG_PATH)
+
 	ld: string
 	if model.global {
 		if model.odin_path == "" {
