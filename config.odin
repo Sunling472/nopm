@@ -3,14 +3,17 @@ package nopm
 import "core:encoding/json"
 import "core:log"
 import "core:os"
+import sp "core:path/slashpath"
 
 Config :: struct {
-	odin_path: string,
+	odin_path:    string,
+	install_path: string,
 }
 
 load_config :: proc(path: string) -> (c: Config) {
 	cwd := os.get_env("PWD")
 	home := os.get_env("HOME")
+
 	if home == "" {
 		log.panic("environment variable HOME is required")
 	}

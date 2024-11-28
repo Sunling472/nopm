@@ -1,0 +1,3 @@
+[submodule "/home/sunling/odin/nopm/libs/odin-http"]
+	path = /home/sunling/odin/nopm/libs/odin-http
+	url = https://github.com/laytan/odin-http.git

@@ -8,16 +8,21 @@ import st "core:strings"
 ODIN_MODULE :: "odin"
 
 CmdUpdate :: struct {
-	update: string `args:"pos=0,hidden"`,
-	module: string `args:"pos=1"`,
+	module: string `args:"pos=0"`,
 }
 
 update_odin :: proc() {}
+
+update_all_submodules_cmd :: proc() {
+	os.set_working_directory(LIBS_DIR)
+	args := []string{"submodule", "update", "--remote", "--recursive"}
+
+	cmd_process_replace(GIT, ..args)
+}
 
 command_update :: proc(model: ^CmdUpdate, opt: ^Options) {
 	ld := create_libs_path(opt.cwd)
 	if model.module == ODIN_MODULE do return
 
-	p: os.Process
 
 }

@@ -9,6 +9,8 @@ Flags:
 	-url:<string>, required    // git url
 	-g                         // global install in share
 	-op:<string>               // odin path
+	-sb                        // get as submodule
+	-cl                        // get to clibs
 
 Command: new
 Example: nopm new <project_name> [flags]

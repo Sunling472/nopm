@@ -10,8 +10,11 @@ import st "core:strings"
 import ln "core:sys/linux"
 // import "vendor:libc"
 
-create_libs_path :: proc(cwd: string) -> (lib_dir: string) {
-	lib_dir = p.join({cwd, "libs"})
+// TODO!
+slog_str :: proc(s: string) -> (result: string)
+
+create_libs_path :: proc(cwd: string, dirname := "libs") -> (lib_dir: string) {
+	lib_dir = p.join({cwd, dirname})
 	if !os.exists(lib_dir) {
 		os.make_directory(lib_dir)
 	}
@@ -19,8 +22,8 @@ create_libs_path :: proc(cwd: string) -> (lib_dir: string) {
 }
 
 // TODO! Add progress
-cmd_start :: proc(args: ..string) {
-	defer os.exit(0)
+cmd_process_start :: proc(args: ..string) {
+	// defer os.exit(0)
 
 	pd := os.Process_Desc {
 		command = args,
@@ -39,8 +42,6 @@ cmd_start :: proc(args: ..string) {
 
 cmd_process_replace :: proc(name: string, args: ..string) {
 	defer os.exit(0)
-
-	log.info("Start process")
 	err_exec := dos.execvp(name, args)
 	if err_exec != nil do log.panic(err_exec)
 }

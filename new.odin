@@ -10,9 +10,9 @@ ols_file := #load("./templates/ols", string)
 odin_fmt_file := #load("./templates/odinfmt", string)
 main_file := #load("./templates/main", string)
 
+// TODO! Rename flags
 CmdNew :: struct {
-	new:  string `args:"pos=0,hidden"`,
-	name: string `args:"required,pos=1"`,
+	name: string `args:"required,pos=0"`,
 	path: string,
 }
 
@@ -20,6 +20,12 @@ file_map := map[string]string {
 	"main.odin"    = main_file,
 	"ols.json"     = ols_file,
 	"odinfmt.json" = odin_fmt_file,
+}
+
+init_package :: proc(name, path: string) {
+	os.set_working_directory(path)
+	create_files(name)
+	cmd_process_start("git", "init")
 }
 
 create_files :: proc(project_name: string) {
@@ -53,8 +59,6 @@ command_new :: proc(model: ^CmdNew, opt: ^Options) {
 		assert(err == nil, os.error_string(err))
 	}
 
-	os.set_working_directory(path)
-	create_files(model.name)
-	cmd_start("git", "init")
+	init_package(model.name, path)
 	log.info("Done")
 }

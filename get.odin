@@ -6,15 +6,19 @@ import os "core:os/os2"
 import sp "core:path/slashpath"
 import st "core:strings"
 
+
+// TODO! Rename flags
 CmdGet :: struct {
-	get:       string `args:"pos=0,hidden"`,
-	url:       string `args:"pos=1,required"`,
+	url:       string `args:"pos=0,required"`,
+	submodule: bool `args:"name=sb"`,
 	global:    bool `args:"name=g"`,
 	odin_path: string `args:"name=op"`,
+	clib:      bool `args:"name=cl"`,
 }
 
 LIBS_DIR :: "libs"
 DEFAUL_CONFIG_PATH :: ".config/nopm/config.json"
+GIT :: "git"
 
 
 parse_lib_name :: proc(url: string) -> (name: string) {
@@ -22,6 +26,11 @@ parse_lib_name :: proc(url: string) -> (name: string) {
 	git_name := url_split[len(url_split) - 1]
 	name = st.trim_suffix(git_name, ".git")
 	return
+}
+
+get_submodule :: proc(url, ld: string) {
+	args := []string{"submodule", "add", url, ld}
+	cmd_process_replace(GIT, ..args)
 }
 
 command_get :: proc(model: ^CmdGet, opt: ^Options) {
@@ -34,8 +43,10 @@ command_get :: proc(model: ^CmdGet, opt: ^Options) {
 		} else {
 			ld = sp.join({model.odin_path, "shared"})
 		}
+
+	} else if model.clib {
+		ld = create_libs_path(opt.cwd, "clibs")
 	} else {
-		create_libs_path(opt.cwd)
 		ld = create_libs_path(opt.cwd)
 	}
 
@@ -44,5 +55,9 @@ command_get :: proc(model: ^CmdGet, opt: ^Options) {
 	result_wd := sp.join({ld, lib_name})
 
 	os.chdir(ld)
-	cmd_process_replace("git", "clone", model.url, result_wd)
+	if model.submodule {
+		get_submodule(model.url, result_wd)
+	} else {
+		cmd_process_replace(GIT, "clone", model.url, result_wd)
+	}
 }
