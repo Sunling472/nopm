@@ -66,7 +66,7 @@ main :: proc() {
 	case commands[.Init]:
 		buff := st.split(opts.cwd, "/")
 		name := buff[len(buff) - 1]
-		init_package(name, opts.cwd)
+		init_package(&opts.new, opts.cwd)
 	case commands[.Update]:
 	case commands[.Install]:
 		flags.parse_or_exit(&opts.install, args)

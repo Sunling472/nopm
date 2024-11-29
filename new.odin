@@ -15,6 +15,7 @@ zed_tasks_file := #load("./templates/zed/tasks", string)
 CmdNew :: struct {
 	name: string `args:"required,pos=0"`,
 	path: string,
+	zed:  bool,
 }
 
 FileMap :: map[string]string
@@ -44,13 +45,13 @@ dir_map := map[string]FileMap {
 	".zed" = zed_map,
 }
 
-init_package :: proc(name, path: string) {
+init_package :: proc(model: ^CmdNew, path: string) {
 	os.set_working_directory(path)
-	create_files(name)
+	create_files(model)
 	cmd_process_start("git", "init")
 }
 
-create_files :: proc(project_name: string) {
+create_files :: proc(model: ^CmdNew) {
 	os.mkdir("bin")
 	for dir, files in dir_map {
 		for name, &file in files {
@@ -64,6 +65,8 @@ create_files :: proc(project_name: string) {
 				if err_write != nil do log.panic(err_write)
 				continue
 			case:
+				if dir == ".zed" && !model.zed do continue
+
 				err_d := os.mkdir(dir)
 				if err_d != nil do log.panic(err_d)
 				os.chdir(dir)
@@ -74,9 +77,9 @@ create_files :: proc(project_name: string) {
 				if err_f != nil do log.panic(err_f)
 
 				if name == "tasks.json" {
-					file = fmt.aprintf(file, project_name, project_name)
+					file = fmt.aprintf(file, model.name, model.name)
 				} else if name == "main.odin" {
-					file = fmt.aprintf(file, project_name)
+					file = fmt.aprintf(file, model.name)
 				}
 
 				_, err_write := os.write_string(f, file)
@@ -102,6 +105,6 @@ command_new :: proc(model: ^CmdNew, opt: ^Options) {
 		assert(err == nil, os.error_string(err))
 	}
 
-	init_package(model.name, path)
+	init_package(model, path)
 	log.info("Done")
 }
