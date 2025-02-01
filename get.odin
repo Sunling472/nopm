@@ -7,18 +7,14 @@ import sp "core:path/slashpath"
 import st "core:strings"
 
 
-// TODO! Rename flags
 CmdGet :: struct {
-	url:       string `args:"pos=0,required"`,
-	submodule: bool `args:"name=sb"`,
-	global:    bool `args:"name=g"`,
-	odin_path: string `args:"name=op"`,
-	clib:      bool `args:"name=cl"`,
+	url:       string `args:"pos=0,required" usage:"url to git repo"`,
+	submodule: bool `usage:"clone as submodule"`,
+	global:    bool `usage:"get to ODIN_ROOT/share"`,
+	odin_path: string `usage:"path to odin"`,
+	clib:      bool `usage:"get into clibs dir"`,
+	nohistory: bool `usage:"clone by depth=1"`
 }
-
-LIBS_DIR :: "libs"
-DEFAUL_CONFIG_PATH :: ".config/nopm/config.json"
-GIT :: "git"
 
 
 parse_lib_name :: proc(url: string) -> (name: string) {
@@ -58,6 +54,12 @@ command_get :: proc(model: ^CmdGet, opt: ^Options) {
 	if model.submodule {
 		get_submodule(model.url, result_wd)
 	} else {
-		cmd_process_replace(GIT, "clone", model.url, result_wd)
+		cmd_process_replace(
+			GIT,
+			"clone",
+			model.url, result_wd,
+			"--depth=1" if model.nohistory else ""
+		)
 	}
 }
+

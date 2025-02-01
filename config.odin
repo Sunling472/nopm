@@ -10,9 +10,13 @@ Config :: struct {
 	install_path: string,
 }
 
+FILE_NAME :: "config.json"
+
 load_config :: proc(path: string) -> (c: Config) {
 	cwd := os.get_env("PWD")
 	home := os.get_env("HOME")
+
+	path := sp.join({path, FILE_NAME})
 
 	if home == "" {
 		log.panic("environment variable HOME is required")
@@ -24,10 +28,21 @@ load_config :: proc(path: string) -> (c: Config) {
 	data, ok := os.read_entire_file_from_filename(path, context.allocator)
 	defer delete(data)
 
-	if !ok do panic("Error read")
+	if !ok {
+		err_make_config_dir := os.make_directory(path)
+		if err_make_config_dir != nil do log.panic(err_make_config_dir)
 
-	err := json.unmarshal(data, &c)
-	if err != nil do log.panic(err)
+		cfg, err_create_cfg := os.open("", os.O_APPEND, 0777)
+		if err_create_cfg != nil do log.panic(err_create_cfg)
+		defer os.close(cfg)
+
+		os.write_string(cfg, "{\n\"odin_path\": null, \"install_path: null\"\n}")
+	}
+
+	log.info(path)
+
+	err_unmarshal := json.unmarshal(data, &c)
+	if err_unmarshal != nil do log.panic(err_unmarshal)
 
 	return
 }

@@ -8,11 +8,13 @@ import st "core:strings"
 command_list := map[string]typeid {
 	"new" = CmdNew,
 	"get" = CmdGet,
+	"install" = CmdInstall,
 }
 
 command_help := map[string]string {
 	"new" = "Example: nopm new <project_name> [flags]",
 	"get" = "Example: nopm get <repo_url> [flags]",
+	"install" = "Example: nopm install <package/path> [flags]"
 }
 
 get_help :: proc() {
@@ -30,6 +32,7 @@ get_help :: proc() {
 		fmt.println(command_help[k])
 
 		flags.write_usage(w, command_list[k])
+		fmt.printfln("")
 	}
 	defer os.exit(0)
 }

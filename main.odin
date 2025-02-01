@@ -9,6 +9,10 @@ import "core:slice"
 import st "core:strings"
 
 
+LIBS_DIR :: "libs"
+DEFAUL_CONFIG_PATH :: ".config/nopm"
+GIT :: "git"
+
 Options :: struct {
 	new:     CmdNew,
 	get:     CmdGet,

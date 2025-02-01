@@ -6,8 +6,8 @@ import sp "core:path/slashpath"
 import st "core:strings"
 
 CmdInstall :: struct {
-	path: string `args:"pos=0"`,
-	url:  bool,
+	path: string `args:"pos=0" usage:"Path to package"`,
+	url:  bool `usage:"use if path is url"`,
 }
 
 create_bin_dir :: proc(path: string) {
@@ -38,6 +38,7 @@ create_bin_dir :: proc(path: string) {
 
 cmd_install :: proc(model: ^CmdInstall, opts: ^Options) {
 	cfg := load_config(DEFAUL_CONFIG_PATH)
+	if cfg.install_path == "" do log.panic("install_path in config is null")
 	create_bin_dir(cfg.install_path)
 	if model.url {
 		install_from_git(model.path, &cfg)
